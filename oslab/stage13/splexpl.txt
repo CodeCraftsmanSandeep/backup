@@ -1,0 +1,2 @@
+./spl $HOME/oslab/stage13/os_startup.spl
+./spl $HOME/oslab/stage13/boot.spl

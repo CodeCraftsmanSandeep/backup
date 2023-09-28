@@ -1,0 +1,41 @@
+0
+2056
+0
+0
+0
+0
+0
+0
+MOV R0, 1
+MOV R1, 21
+GT R1, R0
+JZ R1, 2098
+
+PUSH R0 // backup
+
+
+MOV R1, 5 // sys call number of write
+PUSH R1
+
+
+MOV R1, -2 // pushing 3 arguments
+PUSH R1
+PUSH R0
+PUSH R0
+
+
+PUSH R0 // return value
+INT 7 // invoke interrupt
+
+POP R0 // ret val
+POP R0 // arg 3
+POP R0 // arg 2
+POP R0 // arg 1
+POP R0 // sys num
+
+
+POP R0 // restore
+INR R0
+JMP 2058
+
+INT 10

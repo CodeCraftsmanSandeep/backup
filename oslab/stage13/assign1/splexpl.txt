@@ -1,0 +1,5 @@
+./spl $HOME/oslab/stage13/assign1/boot.spl
+./spl $HOME/oslab/stage13/assign1/sample_timer.spl
+
+./expl $HOME/oslab/stage13/assign1/even.expl
+./expl $HOME/oslab/stage13/assign1/odd.expl

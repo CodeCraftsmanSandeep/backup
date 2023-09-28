@@ -1,0 +1,6 @@
+load --os $HOME/oslab/stage9/os_startup.xsm
+load --int=timer $HOME/oslab/stage9/sample_timer.xsm
+load --exhandler $HOME/oslab/stage9/haltprog.xsm
+load --int=10 $HOME/oslab/stage9/haltprog.xsm
+load --init $HOME/oslab/stage9/squares.xsm
+load --library ../expl/library.lib

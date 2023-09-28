@@ -1,0 +1,23 @@
+type
+Student{
+	str name;
+	int marks;
+}
+endtype
+
+int main(){
+	decl
+		int val;
+		Student s;
+	enddecl
+	begin	
+		val = initialize(); /* heap initialized */
+		s = alloc();
+		s.name = "John";
+		s.marks = 89;
+		
+		write(s.name);
+		write(s.marks);
+		return 0;
+	end
+}	

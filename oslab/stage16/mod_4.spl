@@ -1,0 +1,66 @@
+// device manager module
+
+alias functionNum R1;
+alias currentPID R2;
+alias word R3;
+
+if(functionNum == 3) then
+	// terminal_write = 3
+	
+	// backup
+	multipush(R1, R2, R3);
+	
+	R1 = 8; // terminal acquire
+	R2 = [SYSTEM_STATUS_TABLE + 1]; // pid
+	
+	call MOD_0; // resoruce manager module
+	
+	// restore
+	multipop(R1, R2, R3);
+	
+	print word;
+	
+	// backup
+	multipush(R1, R2, R3);
+	
+	R1 = 9; // terminal release
+	R2 = [SYSTEM_STATUS_TABLE + 1]; // pid
+	
+	call MOD_0; // resource manager module
+	
+	// restore
+	multipop(R1, R2, R3);	
+endif;
+
+if(functionNum == 4) then
+	// terminal_read = 4
+
+	// backup
+	multipush(R1, R2, R3);
+	
+	R1 = 8; // terminal acquire
+	R2 = [SYSTEM_STATUS_TABLE + 1]; // pid
+	
+	call MOD_0; // resource manager module
+	
+	// restore
+	multipop(R1, R2, R3);
+	
+	read; // IN
+	
+	[PROCESS_TABLE + [SYSTEM_STATUS_TABLE + 1]*16 + 4] = WAIT_TERMINAL;
+	
+	// backup
+	multipush(R1, R2, R3);
+	
+	call MOD_5; // scheduler
+	
+	// restore
+	multipop(R1, R2, R3);		
+	
+	R3 = [PROCESS_TABLE + R2*16 + 14] + (R3/512)*2 + (R3 % 512); // logical to physical
+	[R3] = [PROCESS_TABLE + R2*16 + 8]; // input buffer
+	
+	// NOTE: release terminal is done in resource manager module after console interrupt.
+endif;
+return;

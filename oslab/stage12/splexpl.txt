@@ -1,0 +1,3 @@
+./spl $HOME/oslab/stage12/os_startup.spl
+./spl $HOME/oslab/stage12/sample_timer.spl
+./expl $HOME/oslab/stage12/idle_code.expl

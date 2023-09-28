@@ -1,0 +1,2 @@
+./expl $HOME/oslab/stage12/assign1/idle_code.expl
+./spl $HOME/oslab/stage12/assign1/os_startup.spl

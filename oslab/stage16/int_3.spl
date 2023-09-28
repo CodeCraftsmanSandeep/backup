@@ -1,0 +1,32 @@
+// console interrupt handler
+
+[PROCESS_TABLE + 16*[SYSTEM_STATUS_TABLE + 1] + 13] = SP; // UPTR
+SP = [PROCESS_TABLE + 16*[SYSTEM_STATUS_TABLE + 1] + 11]*512 - 1; // kernal stack
+
+// backup the user context
+backup;
+
+alias reqPID R0;
+reqPID = [TERMINAL_STATUS_TABLE + 1];
+[PROCESS_TABLE + reqPID*16 + 8] = P0; // input buffer feild in process table
+
+// release the terminal
+
+// backup the registers used
+multipush(R0);
+
+// arguments
+R1 = 9; 	// release terminal
+R2 = reqPID; 
+
+call MOD_0; 	// resource manager
+
+// restore
+multipop(R0);
+
+// restore the user context
+restore;
+
+SP = [PROCESS_TABLE + 16*[SYSTEM_STATUS_TABLE + 1] + 13]; // UPTR
+
+ireturn;

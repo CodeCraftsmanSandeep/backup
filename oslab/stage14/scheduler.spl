@@ -1,0 +1,48 @@
+alias currentPID R0;
+currentPID = [SYSTEM_STATUS_TABLE + 1];
+
+multipush(BP);
+
+alias process_table_entry R1;
+process_table_entry = PROCESS_TABLE + 16 * currentPID;
+
+[process_table_entry + 12] = SP % 512; // KTPR
+[process_table_entry + 14] = PTBR;
+[process_table_entry + 15] = PTLR;
+
+alias i R2;
+i = (currentPID + 1) % MAX_PROC_NUM;
+
+alias j R3;
+j = 0;
+
+alias newPID R4;
+newPID = 0;
+
+while(j < MAX_PROC_NUM) do
+	if((i != 0) && ([PROCESS_TABLE + i*16 + 4] == READY) || ([PROCESS_TABLE + i*16 + 4] == CREATED)) then
+		newPID = i;
+		break;	
+	endif;
+	i = (i + 1) % MAX_PROC_NUM;
+	j = j + 1;
+endwhile;
+
+alias new_process_table R3;
+new_process_table = PROCESS_TABLE + newPID * 16;
+
+SP =  [new_process_table + 11] * 512 + [new_process_table + 12]; // kernal SP
+PTBR = [new_process_table + 14];
+PTLR = [new_process_table + 15];
+
+[SYSTEM_STATUS_TABLE + 1] = newPID;
+
+if([new_process_table + 4] == CREATED) then
+	[new_process_table + 4] = RUNNING;
+	SP = [new_process_table + 13]; // user stack
+	[PROCESS_TABLE + [SYSTEM_STATUS_TABLE + 1]*16 + 9] = 0; // mode flag
+	ireturn;
+endif;
+[new_process_table + 4] = RUNNING;
+multipop(BP);
+return;

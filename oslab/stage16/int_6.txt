@@ -1,0 +1,39 @@
+// read interrupt
+
+[PROCESS_TABLE + [SYSTEM_STATUS_TABLE + 1]*16 + 9] = 7; // sys num of read sys call(mode flag)
+
+alias userSP R0;
+userSP=SP;
+
+[PROCESS_TABLE + [SYSTEM_STATUS_TABLE + 1]*16 + 13] = SP; // UPTR
+SP =[PROCESS_TABLE + [SYSTEM_STATUS_TABLE + 1]*16 + 11]*512 - 1; // kernal stack
+
+alias filedescriptor R1;
+filedescriptor = [PTBR + ((userSP-4)/512)*2 + ((userSP-4)%512)]; // file descriptor (arg1)
+
+alias returnvalue R2;
+if(filedescriptor == -1) then
+	alias word_address R3;
+	word_address = [PTBR + ((userSP-3)/512)*2 + ((userSP-3)%512)]; // arg2 (word to write)
+	
+	// backpup
+	multipush(R0, R1, R2, R3);
+	
+	R1 = 4; // terminal_read function number in device manager
+	R2 = [SYSTEM_STATUS_TABLE + 1]; // cuurent pid
+	R3 = word_address; // word 
+	
+	call MOD_4; // device manager module
+	
+	// restore
+	multipop(R0, R1, R2, R3);
+	
+	returnvalue = 0; // success
+else 
+	returnvalue = -1; // failure
+endif;
+
+[PTBR + ((userSP-1)/512)*2 + ((userSP-1)%512)] = returnvalue; // return value
+[PROCESS_TABLE + [SYSTEM_STATUS_TABLE + 1]*16 + 9] = 0; // reset mode flag
+SP = [PROCESS_TABLE + [SYSTEM_STATUS_TABLE + 1]*16 + 13]; // set user stack
+ireturn;

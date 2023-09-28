@@ -1,0 +1,4 @@
+./spl $HOME/oslab/stage15/boot.spl
+./spl $HOME/oslab/stage15/int_7.spl
+./spl $HOME/oslab/stage15/mod_0.spl
+./spl $HOME/oslab/stage15/mod_4.spl

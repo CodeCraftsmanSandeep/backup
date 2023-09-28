@@ -1,0 +1,5 @@
+In debug mode:
+m 56 // process tables in mem in xsm
+m 58 // page tables in mem in xsm
+
+

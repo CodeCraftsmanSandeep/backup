@@ -1,0 +1,39 @@
+0 			// 2048 // header (8 words) starting from 4th logical page
+2056			// entry point
+0
+0
+0
+0
+0
+0
+MOV R0, 1		// 2056 // code for printing first 5 squares of natural numbers
+MOV R2, 5
+GE R2, R0		// if R0 is greater than 5 then R2 = 0 else R2 = 1
+JZ R2, 2110		
+MOV R1, R0
+MUL R1, R0		// R1 = R1 * R0
+PUSH R0 		// saving register context
+PUSH R1
+PUSH R2
+MOV R0, 5		// pushing system call number
+PUSH R0
+MOV R2, -2 		// -2 terminal for terminal write // pushing 3 arguments
+PUSH R2
+PUSH R1 		// write argument
+PUSH R0			// following the convention
+PUSH R0			// pushing space for return value from sys
+INT 7			// invoking interrupt 7
+POP R1 			// return value (ignore)
+POP R1 			// arg 3 (ignore)
+POP R1 			// arg 2 (ignore)
+POP R1 			// arg 1 (ignore)
+POP R1 			// sys call number (ignore)
+POP R2			// restore the register context
+POP R1
+POP R0
+INR R0
+
+
+
+JMP 2058
+INT 10 // invoking exit 

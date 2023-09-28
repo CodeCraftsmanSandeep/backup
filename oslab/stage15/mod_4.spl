@@ -1,0 +1,34 @@
+// device manager module
+
+alias functionNum R1;
+alias currentPID R2;
+alias word R3;
+
+if(functionNum == 3) then
+	// terminal_write = 3
+	
+	// backup
+	multipush(R1, R2, R3);
+	
+	R1 = 8; // terminal acquire
+	R2 = [SYSTEM_STATUS_TABLE + 1]; // pid
+	
+	call MOD_0;
+	
+	// restore
+	multipop(R1, R2, R3);
+	
+	print word;
+	
+	// backup
+	multipush(R1, R2, R3);
+	
+	R1 = 9; // terminal release
+	R2 = [SYSTEM_STATUS_TABLE + 1]; // pid
+	
+	call MOD_0;
+	
+	// restore
+	multipop(R1, R2, R3);	
+endif;
+return;
